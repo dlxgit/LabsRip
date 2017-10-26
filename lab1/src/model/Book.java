@@ -1,59 +1,31 @@
 package model;
 
+import servlet.MyFirstServlet;
+
+import java.util.Date;
+
 public class Book {
     private String name;
     private String author;
-    private String year;
+    private Date date;
     private String genre;
+    private int rating;
 
-    private Book(Builder builder) {
-        this.name = builder.name;
-        this.author = builder.author;
-        this.year = builder.year;
-        this.genre = builder.genre;
+    public Book(String name, String author, Date date, String genre, int rating) {
+        this.name = name;
+        this.author = author;
+        this.date = date;
+        this.genre = genre;
+        this.rating = rating;
     }
 
     @Override
     public String toString() {
-        return "Book: " + name
-                + " author: " + author
-                + " year: " + year
-                + " genre: " + genre;
-    }
-
-
-    public static class Builder {
-        private String name;
-        private String author;
-        private String year;
-        private String genre;
-
-        public Builder() {
-
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder setAuthor(String author) {
-            this.author = author;
-            return this;
-        }
-
-        public Builder setYear(String year) {
-            this.year = year;
-            return this;
-        }
-
-        public Builder setGenre(String genre) {
-            this.genre = genre;
-            return this;
-        }
-
-        public Book build() {
-            return new Book(Builder.this);
-        }
+        return    "Book: " + name
+                + "<p>author: " + author + "</p>"
+                + "<p>date: " + MyFirstServlet.DATE_FORMAT.format(date) + "</p>"
+                + "<p>genre: " + genre + "</p>"
+                + "<p>rating: " + rating + "</p>"
+                + "<p>_______________</p>";
     }
 }
