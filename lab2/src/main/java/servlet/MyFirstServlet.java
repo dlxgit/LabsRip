@@ -1,6 +1,9 @@
 package servlet;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import database.DatabaseHelper;
+import javafx.util.Pair;
 import model.Book;
 import util.ApplicationUtils;
 import util.FileEventLogger;
@@ -11,17 +14,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 
 @WebServlet("/MyFirstServlet")
 public class MyFirstServlet extends HttpServlet{
-
-    public MyFirstServlet() {
-
-    }
+    HashMap<String, String> templateMap = new HashMap<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,9 +37,14 @@ public class MyFirstServlet extends HttpServlet{
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        String output = "";
         for(Book b : books) {
-            out.println("<h1>" + b.toString() + "</h1>");
+            output += ("<h1>" + b.toString() + "</h1>");
         }
+        templateMap.put("books", output);
+
+        out.write(getBaseHtml().replace("{%%content%%}", output));
         out.flush();
     }
 
@@ -62,7 +69,18 @@ public class MyFirstServlet extends HttpServlet{
     }
 
     private void resetPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.html");
         requestDispatcher.forward(req, resp);
+    }
+
+    private String getBaseHtml() {
+        return "<html>" +
+                "<head>" +
+                "<title>Books</title>" +
+                "</head>" +
+                "<body>" +
+                "{%%content%%}" +
+                "</body>" +
+                "</html>";
     }
 }

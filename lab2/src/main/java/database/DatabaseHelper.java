@@ -35,6 +35,11 @@ public class DatabaseHelper {
 
     public static void addBook(Book book) {
         FileEventLogger.logEvent("Adding new book: " + book.toString());
+        if (exists(book)) {
+            FileEventLogger.logEvent("Book " + book.toString() + " already exists.");
+            return;
+        }
+
         try {
             queryInsert("INSERT INTO Books (name, author, date, genre, rating) VALUES ('"
                     + book.getName() + "','"
@@ -106,5 +111,20 @@ public class DatabaseHelper {
         if (rs != null) {
             rs.close();
         }
+    }
+
+    private static boolean exists(Book book) {
+        ResultSet rs = null;
+        try {
+            rs = queryRead("SELECT * FROM Books WHERE name='" + book.getName() + "' and author='" + book.getAuthor() + "';");
+            return rs.next();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            FileEventLogger.logEvent(e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            FileEventLogger.logEvent(e.getMessage());
+        }
+        return false;
     }
 }
