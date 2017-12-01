@@ -21,66 +21,77 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * servlet class
+ */
 @WebServlet("/MyFirstServlet")
-public class MyFirstServlet extends HttpServlet{
-    HashMap<String, String> templateMap = new HashMap<>();
+public class MyFirstServlet extends HttpServlet {
+  HashMap<String, String> templateMap = new HashMap<>();
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        FileEventLogger.logEvent("get request: " + req.toString());
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    FileEventLogger.logEvent("get request: " + req.toString());
 
-        resp.setContentType("text/html");
-        PrintWriter out = resp.getWriter();
-        List<Book> books = null;
-        try {
-            books = DatabaseHelper.readBooks();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        String output = "";
-        for(Book b : books) {
-            output += ("<h1>" + b.toString() + "</h1>");
-        }
-        templateMap.put("books", output);
-
-        out.write(getBaseHtml().replace("{%%content%%}", output));
-        out.flush();
+    resp.setContentType("text/html");
+    PrintWriter out = resp.getWriter();
+    List<Book> books = null;
+    try {
+      books = DatabaseHelper.readBooks();
+    } catch (ParseException e) {
+      e.printStackTrace();
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        FileEventLogger.logEvent("post request: " + req);
-        try {
-            Book book = new Book(
-                    req.getParameter("book")
-                    , req.getParameter("author")
-                    , ApplicationUtils.DATE_FORMAT.parse(req.getParameter("date"))
-                    , req.getParameter("genre")
-                    , Integer.parseInt(req.getParameter("rating"))
-            );
-            DatabaseHelper.addBook(book);
-        } catch (ParseException e) {
-            System.out.println("Err occured");
-            e.printStackTrace();
-        }
+    String output = "";
+    for (Book b : books) {
+      output += ("<h1>" + b.toString() + "</h1>");
+    }
+    templateMap.put("books", output);
 
-        resetPage(req, resp);
+    out.write(getBaseHtml().replace("{%%content%%}", output));
+    out.flush();
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    FileEventLogger.logEvent("post request: " + req);
+    try {
+      Book book = new Book(
+          req.getParameter("book"),
+          req.getParameter("author"),
+          ApplicationUtils.DATE_FORMAT.parse(req.getParameter("date")),
+          req.getParameter("genre"),
+          Integer.parseInt(req.getParameter("rating"))
+      );
+      DatabaseHelper.addBook(book);
+    } catch (ParseException e) {
+      System.out.println("Err occured");
+      e.printStackTrace();
     }
 
-    private void resetPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.html");
-        requestDispatcher.forward(req, resp);
-    }
+    resetPage(req, resp);
+  }
 
-    private String getBaseHtml() {
-        return "<html>" +
-                "<head>" +
-                "<title>Books</title>" +
-                "</head>" +
-                "<body>" +
-                "{%%content%%}" +
-                "</body>" +
-                "</html>";
-    }
+  /**
+   * @param req  request
+   * @param resp response
+   * @throws ServletException
+   * @throws IOException
+   */
+  private void resetPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.html");
+    requestDispatcher.forward(req, resp);
+  }
+
+  /**
+   * @return minimal html response
+   */
+  private String getBaseHtml() {
+    return "<html>"
+      + "<head>"
+      + "<title>Books</title>"
+      + "</head>"
+      + "<body>"
+      + "{%%content%%}" + "</body>"
+      + "</html>";
+  }
 }
