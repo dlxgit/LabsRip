@@ -1,9 +1,11 @@
-<html>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>New book</title>
+    <title>Books</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<form method="post" action="MyFirstServlet">
+<form action="#" th:action="@{/index}" method="post">
     Name: <input type="text" name="book"/>
     Author: <input type="text" name="author"/>
     Date: <input type="text" name="date"/>
@@ -11,8 +13,27 @@
     Rating: <input type="text" name="rating"/>
     <button id="addBtn">Add</button>
 </form>
-<form action="/MyFirstServlet">
+<form action="#" th:action="@{/index}"  method="get">
     <button id="showBtn">Show all books</button>
+    <p th:each="book : ${books}"
+       th:text="${smokeTest.name}">A Smoke Test</p>
 </form>
 </body>
 </html>
+
+
+<!--
+<head>
+<form action="#" th:action="@{/greeting}" th:object="${MainController}" method="get">
+
+</head>
+<body>
+<h1>Form</h1>
+<>
+    <p>Id: <input type="text" th:field="*{id}" /></p>
+    <p>Message: <input type="text" th:field="*{content}" /></p>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
+</body>
+</html>
+-->

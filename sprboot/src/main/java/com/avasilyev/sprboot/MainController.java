@@ -1,5 +1,6 @@
 package com.avasilyev.sprboot;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.stereotype.*;
@@ -9,6 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @EnableAutoConfiguration
 public class MainController {
+
+
+  @Autowired
+  private BookService bookService;
 
   @RequestMapping(value = "/index", method = RequestMethod.GET)
   // @RequestMapping(value="/index.html", method = RequestMethod.GET)
