@@ -5,35 +5,44 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<form action="#" th:action="@{/index}" method="post">
-    Name: <input type="text" name="book"/>
-    Author: <input type="text" name="author"/>
-    Date: <input type="text" name="date"/>
-    Genre: <input type="text" name="genre"/>
-    Rating: <input type="text" name="rating"/>
-    <button id="addBtn">Add</button>
+
+
+<form action="#" th:action="@{/index}" th:object="${book}" method="post">
+    <label for="name"><p th:text="#{name}"></p></label>
+    <input type="text" id="name" name="name" th:field="*{name}" required=""/>
+    <label for="author"><p th:text="#{author}"></p></label>
+    <input type="text" id="author" name="author" th:field="*{author}" required=""/>
+    <label for="date"><p th:text="#{date}"></p></label>
+    <input type="date" id="date" name="date" th:field="*{date}" required=""/>
+    <label for="genre"><p th:text="#{genre}"></p></label>
+    <input type="text" id="genre" name="genre" th:field="*{genre}" required=""/>
+    <label for="rating"><p th:text="#{rating}"></p></label>
+    <input type="number" id="rating" name="rating" th:field="*{rating}" required=""/>
+    <button id="addBtn" th:text="#{addBtn}"></button>
 </form>
-<form action="#" th:action="@{/index}"  method="get">
-    <button id="showBtn">Show all books</button>
-    <p th:each="book : ${books}"
-       th:text="${smokeTest.name}">A Smoke Test</p>
-</form>
+
+<p th:text="${textFromUrl}"></p>
+
+<th:block th:each="book : ${books}">
+    <tr>
+        <td>
+            <p th:text="${book.name}"></p>
+        </td>
+        <td>
+            <p th:text="${book.author}"></p>
+        </td>
+        <td>
+            <p th:text="${#dates.format(book.date, 'mm/dd/yyyy')}"></p>
+        </td>
+        <td>
+            <p th:text="${book.genre}"></p>
+        </td>
+        <td>
+            <p th:text="${book.rating}"></p>
+        </td>
+    </tr>
+    <p>_______________</p>
+</th:block>
+
 </body>
 </html>
-
-
-<!--
-<head>
-<form action="#" th:action="@{/greeting}" th:object="${MainController}" method="get">
-
-</head>
-<body>
-<h1>Form</h1>
-<>
-    <p>Id: <input type="text" th:field="*{id}" /></p>
-    <p>Message: <input type="text" th:field="*{content}" /></p>
-    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-</form>
-</body>
-</html>
--->
